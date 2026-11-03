@@ -1,0 +1,903 @@
+<title>The Midnight Lounge</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shrikhand&family=VT323&display=swap">
+<style>
+/* Layout: a 1970s wood-cabinet TV on a den wall; pixel isometric studio on the tube, controls column on the right, stacks on phones */
+:root {
+  color-scheme: dark;
+  --den: #1b110c;
+  --den-2: #24160f;
+  --wood: #6b3d22;
+  --wood-dk: #3e210f;
+  --wood-hi: #8a5430;
+  --orange: #e2672b;
+  --mustard: #e8ab2e;
+  --avocado: #8a9a3c;
+  --cream: #f3e2bd;
+  --brass: #c9a35a;
+  --bezel: #17120e;
+  --tube: #0b0d0a;
+  --ink: #f3e2bd;
+  --muted: #b99b78;
+  --display: "Shrikhand", "Cooper Black", Georgia, serif;
+  --mono: "VT323", "Courier New", ui-monospace, monospace;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100%;
+  background-color: var(--den);
+  background-image:
+    radial-gradient(circle at 24px 24px, var(--den-2) 0 10px, transparent 11px),
+    radial-gradient(circle at 24px 24px, transparent 0 15px, rgba(226,103,43,.07) 16px 18px, transparent 19px);
+  background-size: 48px 48px;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 20px;
+  line-height: 1.3;
+}
+.wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding-block: 28px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid;
+  gap: 30px;
+}
+.masthead { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 10px 24px; }
+.eyebrow { margin: 0 0 6px; text-transform: uppercase; letter-spacing: .14em; color: var(--muted); }
+h1 {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(36px, 6.4vw, 68px);
+  line-height: .95;
+  color: var(--mustard);
+  text-shadow: 3px 3px 0 var(--orange), 6px 6px 0 var(--wood-dk);
+  text-wrap: balance;
+}
+.airtime { margin: 0; text-align: right; color: var(--muted); letter-spacing: .06em; }
+.airtime b { color: var(--cream); font-weight: 400; }
+
+/* the set */
+.tv {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 176px;
+  gap: 20px;
+  padding: 22px;
+  margin-bottom: 22px;
+  border-radius: 28px;
+  background:
+    repeating-linear-gradient(91deg, rgba(0,0,0,.10) 0 2px, transparent 2px 9px, rgba(255,255,255,.04) 9px 10px, transparent 10px 17px),
+    linear-gradient(180deg, var(--wood-hi), var(--wood) 35%, var(--wood-dk));
+  box-shadow: inset 0 2px 0 rgba(255,255,255,.16), inset 0 -6px 0 rgba(0,0,0,.3), 0 30px 50px rgba(0,0,0,.55);
+}
+.tv::before, .tv::after {
+  content: "";
+  position: absolute;
+  bottom: -22px;
+  width: 46px;
+  height: 24px;
+  background: var(--wood-dk);
+  clip-path: polygon(0 0, 100% 0, 80% 100%, 20% 100%);
+}
+.tv::before { left: 10%; }
+.tv::after { right: 10%; }
+.bezel {
+  min-width: 0;
+  padding: 14px;
+  border-radius: 30px;
+  background: var(--bezel);
+  box-shadow: inset 0 0 0 2px #000, inset 0 0 20px rgba(0,0,0,.8), 0 1px 0 rgba(255,255,255,.12);
+}
+.screen {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  max-width: 100%;
+  border-radius: 9% / 11%;
+  overflow: hidden;
+  background: var(--tube);
+  box-shadow: 0 0 0 3px #000;
+}
+.screen canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  filter: saturate(1.12) contrast(1.06);
+}
+.scan {
+  position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(180deg, rgba(0,0,0,.26) 0 1px, transparent 1px 3px);
+}
+.glass {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 46%, transparent 56%, rgba(0,0,0,.7) 100%),
+    linear-gradient(135deg, rgba(255,255,255,.11), transparent 32%);
+  animation: flicker 5s steps(1) infinite;
+}
+@keyframes flicker { 0%, 100% { opacity: 1; } 47% { opacity: .9; } 48% { opacity: 1; } 81% { opacity: .95; } 82% { opacity: 1; } }
+.bug {
+  position: absolute; top: 6%; right: 8%;
+  font-size: clamp(11px, 1.8vw, 19px); letter-spacing: .06em;
+  color: #fff; opacity: .85; text-shadow: 1px 1px 0 #000;
+}
+.bug .dot { color: #ff3b2f; animation: blink 1.2s steps(2, start) infinite; }
+@keyframes blink { to { visibility: hidden; } }
+.cc {
+  position: absolute; left: 50%; bottom: 6%;
+  transform: translateX(-50%);
+  width: max-content; max-width: 86%;
+  padding: .05em .45em;
+  background: rgba(0,0,0,.86); color: #f8f4e6;
+  font-size: clamp(13px, 2.3vw, 25px); line-height: 1.25;
+  text-transform: uppercase; text-align: center;
+}
+.cc:empty { display: none; }
+.chyron {
+  position: absolute; left: 6%; bottom: 21%;
+  display: grid; gap: 2px;
+  padding: .25em .8em .3em 1.7em;
+  max-width: 70%;
+  color: var(--wood-dk);
+  background: linear-gradient(90deg, var(--orange) 0 .35em, var(--mustard) .35em .7em, var(--avocado) .7em 1.05em, var(--cream) 1.05em);
+  box-shadow: 4px 4px 0 rgba(0,0,0,.5);
+  transform: translateX(-140%);
+  transition: transform .55s cubic-bezier(.2,.9,.2,1);
+}
+.chyron.on { transform: none; }
+.chyron b { font-family: var(--display); font-weight: 400; font-size: clamp(14px, 2.5vw, 28px); line-height: 1.05; }
+.chyron span { font-size: clamp(12px, 1.8vw, 19px); text-transform: uppercase; letter-spacing: .05em; }
+
+/* controls */
+.panel { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.grille {
+  flex: 1; min-height: 90px; border-radius: 12px;
+  background: repeating-linear-gradient(180deg, #2a1709 0 3px, var(--brass) 3px 5px);
+  box-shadow: inset 0 0 0 3px var(--wood-dk), inset 0 0 14px rgba(0,0,0,.6);
+}
+.vu {
+  position: relative;
+  padding: 8px 10px 6px;
+  border-radius: 10px;
+  background: var(--cream); color: var(--wood-dk);
+  box-shadow: inset 0 0 0 3px var(--wood-dk);
+  text-align: center; font-size: 16px; letter-spacing: .14em;
+}
+.vu-face { position: relative; height: 58px; overflow: hidden; }
+.vu-face svg { width: 100%; height: 100%; display: block; }
+.needle {
+  position: absolute; left: 50%; bottom: -2px;
+  width: 2px; height: 54px; margin-left: -1px;
+  background: #b3261e; transform-origin: 50% 100%;
+  transform: rotate(-40deg); transition: transform .35s ease-out;
+}
+.controls { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 10px; }
+.key {
+  font: inherit; font-size: 18px; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--wood-dk);
+  background: linear-gradient(180deg, #f8ecd0, #d8c29a);
+  border: 0; border-radius: 6px; padding: 9px 6px 7px; cursor: pointer;
+  box-shadow: 0 4px 0 #6d5332, 0 6px 8px rgba(0,0,0,.4);
+}
+.key:active { transform: translateY(3px); box-shadow: 0 1px 0 #6d5332; }
+.key[aria-pressed="true"] { background: linear-gradient(180deg, #ffd98a, var(--mustard)); }
+.dial { grid-column: 1 / -1; display: flex; align-items: center; gap: 12px; }
+.knob {
+  --rot: 0deg;
+  flex: none; width: 60px; height: 60px; border-radius: 50%; border: 0; cursor: pointer; position: relative;
+  background: radial-gradient(circle at 35% 30%, #fff8e8, var(--brass) 45%, #6d5332 100%);
+  box-shadow: 0 4px 0 #3b2412, inset 0 -3px 6px rgba(0,0,0,.35);
+  transform: rotate(var(--rot)); transition: transform .3s;
+}
+.knob::after { content: ""; position: absolute; left: 50%; top: 6px; width: 4px; height: 16px; margin-left: -2px; border-radius: 2px; background: var(--wood-dk); }
+.dial label { font-size: 16px; line-height: 1.1; letter-spacing: .08em; text-transform: uppercase; color: var(--cream); }
+.dial label small { display: block; color: var(--muted); font-size: 15px; letter-spacing: .04em; text-transform: none; }
+
+/* lineup */
+.lineup h2 { margin: 0 0 12px; font-family: var(--display); font-weight: 400; font-size: 30px; color: var(--mustard); }
+.lineup ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.slot {
+  width: 100%;
+  display: grid; grid-template-columns: 4.2em minmax(0, 1fr) auto; gap: 14px; align-items: center;
+  padding: 10px 14px;
+  font: inherit; color: var(--ink); text-align: left; cursor: pointer;
+  background: rgba(0,0,0,.25); border: 2px solid var(--wood); border-radius: 10px;
+}
+.slot time { color: var(--muted); font-variant-numeric: tabular-nums; }
+.slot b { display: block; font-weight: 400; font-size: 24px; color: var(--cream); }
+.slot small { display: block; font-size: 18px; color: var(--muted); }
+.slot .tune { text-transform: uppercase; letter-spacing: .08em; color: var(--orange); }
+.slot[aria-current="true"] { border-color: var(--mustard); background: rgba(232,171,46,.12); }
+.slot[aria-current="true"] .tune { color: var(--mustard); }
+:focus-visible { outline: 3px solid var(--mustard); outline-offset: 3px; }
+
+@media (max-width: 760px) {
+  .tv { grid-template-columns: 1fr; padding: 14px; gap: 16px; }
+  .bezel { padding: 9px; border-radius: 22px; }
+  .panel { flex-direction: row; flex-wrap: wrap; }
+  .grille { display: none; }
+  .vu { flex: 1 1 140px; }
+  .controls { flex: 2 1 230px; }
+  .airtime { text-align: left; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .glass, .bug .dot { animation: none; }
+  .chyron, .knob, .needle { transition: none; }
+}
+</style>
+
+<main class="wrap">
+  <header class="masthead">
+    <div>
+      <p class="eyebrow">KVLT Channel 4 presents</p>
+      <h1>The Midnight Lounge</h1>
+    </div>
+    <p class="airtime">with <b>Rex Velvet</b><br>Weeknights · 11:35 PM</p>
+  </header>
+
+  <section class="tv" aria-label="Studio broadcast">
+    <div class="bezel">
+      <div class="screen">
+        <canvas id="stage" width="320" height="240" aria-label="Isometric pixel-art talk show studio: host desk, guest couch, house band and audience"></canvas>
+        <div class="chyron" id="chyron"><b id="chyName"></b><span id="chyRole"></span></div>
+        <div class="cc" id="cc" aria-live="polite"></div>
+        <div class="bug">CH 4 · <span id="clock">11:35 PM</span> <span class="dot">●</span> LIVE</div>
+        <div class="scan"></div>
+        <div class="glass"></div>
+      </div>
+    </div>
+
+    <aside class="panel" aria-label="Control room">
+      <div class="grille" aria-hidden="true"></div>
+      <div class="vu">
+        <div class="vu-face">
+          <svg viewBox="0 0 120 58" aria-hidden="true">
+            <path d="M12 56 A50 50 0 0 1 84 12" fill="none" style="stroke:var(--wood-dk)" stroke-width="1.5"/>
+            <path d="M84 12 A50 50 0 0 1 108 56" fill="none" stroke="#b3261e" stroke-width="4"/>
+            <text x="8" y="22" font-size="11" style="fill:var(--wood-dk)" font-family="VT323, monospace">COLD</text>
+            <text x="94" y="22" font-size="11" fill="#b3261e" font-family="VT323, monospace">HOT</text>
+          </svg>
+          <div class="needle" id="needle"></div>
+        </div>
+        CROWD
+      </div>
+      <div class="controls">
+        <button class="key" id="btnApplause" type="button">Applause</button>
+        <button class="key" id="btnRimshot" type="button">Rimshot</button>
+        <button class="key" id="btnSound" type="button" aria-pressed="false">Sound off</button>
+        <button class="key" id="btnBand" type="button">Band</button>
+        <div class="dial">
+          <button class="knob" id="knob" type="button" aria-label="Next guest"></button>
+          <label for="knob">Channel<small>Next guest</small></label>
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <section class="lineup">
+    <h2>Tonight's lineup</h2>
+    <ol id="lineup"></ol>
+  </section>
+</main>
+
+<script>
+// ---------- show content ----------
+const REX = { skin:'#e2a87c', hair:'#2a1a10', style:'pomp', suit:'#c98a2c', shirt:'#f3e2bd', tie:'#8a2a1a', front:'tie', pants:'#5b3220', shoes:'#1a0f0a' };
+
+const GUESTS = [
+  { name:'Dr. Marla Quince', short:'Marla', role:'Astronaut · 41 days in orbit', slot:'11:38',
+    look:{ skin:'#8d5a3b', hair:'#1c120c', style:'afro', suit:'#ece5d6', shirt:'#ece5d6', tie:'#e2672b', front:'patch', pants:'#ece5d6', shoes:'#4a4a4a' },
+    intro:'Our first guest just spent 41 days in orbit. Please welcome Dr. Marla Quince!',
+    lines:[
+      { who:'guest', text:'Thanks, Rex. Gravity is still a new experience for me.' },
+      { who:'host',  text:'What was the hardest part up there?' },
+      { who:'guest', text:'The Tang. Nobody warns you how much Tang there is.', cue:'laugh' },
+      { who:'host',  text:'Could you see the Great Wall from orbit?' },
+      { who:'guest', text:'I could see your show, Rex. That signal reaches everywhere.', cue:'laugh' },
+      { who:'host',  text:'Dr. Marla Quince, everybody!', cue:'applause' },
+    ]},
+  { name:'Buddy Fontaine', short:'Buddy', role:'Crooner · "Velvet Static" LP out Friday', slot:'11:52',
+    look:{ skin:'#f0c29a', hair:'#3a2214', style:'slick', suit:'#7fb3c9', shirt:'#f8f4e6', tie:'#1a1a1a', front:'bow', pants:'#7fb3c9', shoes:'#f8f4e6' },
+    intro:'Four million records sold and nine tuxedos. Ladies and gentlemen, Buddy Fontaine!',
+    lines:[
+      { who:'guest', text:'Ten tuxedos, Rex. I bought one in the green room.', cue:'laugh' },
+      { who:'host',  text:'Tell us about the new album.' },
+      { who:'guest', text:'Twelve love songs, all recorded in one take, in a phone booth.' },
+      { who:'host',  text:'Why a phone booth?' },
+      { who:'guest', text:'Great echo. Also, it was raining.', cue:'laugh' },
+      { who:'host',  text:'Buddy Fontaine! Velvet Static is in stores Friday.', cue:'applause' },
+    ]},
+  { name:'Prof. Gil Oddsworth', short:'Prof. Gil', role:'Inventor · 212 patents and counting', slot:'12:06',
+    look:{ skin:'#e8b894', hair:'#e8e2d0', style:'bald', glasses:true, suit:'#6f7a3a', shirt:'#f3e2bd', tie:'#c9542f', front:'tie', pants:'#4a3a25', shoes:'#2a1a10' },
+    intro:'Our last guest holds 212 patents. Please welcome Professor Gil Oddsworth!',
+    lines:[
+      { who:'guest', text:'213. I patented the walk out here.', cue:'laugh' },
+      { who:'host',  text:'You are famous for the self-buttering toaster.' },
+      { who:'guest', text:'And infamous for the self-toasting butter.', cue:'laugh' },
+      { who:'host',  text:'What are you working on next?' },
+      { who:'guest', text:'A remote control for the remote control.' },
+      { who:'host',  text:'Professor Gil Oddsworth, folks! We will be right back.', cue:'applause' },
+    ]},
+];
+for (const g of GUESTS) g.steps = [{ who:'host', text:g.intro, cue:'applause', enter:true }, ...g.lines, { exit:true }];
+
+// Decide how the studio audience reacts once a line finishes.
+// line:  { who: 'host' | 'guest', text, cue? }  where cue is the writers' intended reaction
+// crowd: { mood } running 0 (cold) to 1 (on fire); every reaction warms it and it cools over time
+// Return 'laugh', 'applause' or null.
+function audienceReaction(line, crowd) {
+  // TODO(human): decide how the crowd behaves
+  return line.cue ?? null;
+}
+
+// ---------- isometric renderer ----------
+const cv = document.getElementById('stage');
+const ctx = cv.getContext('2d');
+const W = 13, D = 10, H = 6, Z0 = 0.35;     // room size in tiles; stage height
+const OX = 142, OY = 84;                   // screen position of the back corner
+const iso = (x, y, z = 0) => [OX + (x - y) * 12, OY + (x + y) * 6 - z * 12];
+
+const shadeCache = new Map();
+function shade(hex, f) {
+  const k = hex + f;
+  let v = shadeCache.get(k);
+  if (v) return v;
+  const n = parseInt(hex.slice(1), 16);
+  let r = n >> 16, g = n >> 8 & 255, b = n & 255;
+  if (f >= 1) { r += (255 - r) * (f - 1); g += (255 - g) * (f - 1); b += (255 - b) * (f - 1); }
+  else { r *= f; g *= f; b *= f; }
+  v = `rgb(${r | 0},${g | 0},${b | 0})`;
+  shadeCache.set(k, v);
+  return v;
+}
+function poly(pts, fill) {
+  ctx.beginPath();
+  ctx.moveTo(pts[0][0], pts[0][1]);
+  for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+  ctx.closePath();
+  ctx.fillStyle = fill; ctx.fill();
+  ctx.strokeStyle = fill; ctx.lineWidth = 0.5; ctx.stroke();
+}
+// Draw in the plane of a wall or face. Local units are screen pixels; +x runs along the face, +y runs down.
+function planeY(x0, y, ztop, fn) { const [sx, sy] = iso(x0, y, ztop); ctx.save(); ctx.setTransform(1, .5, 0, 1, sx, sy); fn(); ctx.restore(); }
+function planeX(y0, x, ztop, fn) { const [sx, sy] = iso(x, y0, ztop); ctx.save(); ctx.setTransform(1, -.5, 0, 1, sx, sy); fn(); ctx.restore(); }
+
+const bx = (x, y, z, w, d, h, c, deco = null, flat = false) => ({ x, y, z, w, d, h, c, deco, flat });
+function drawBox(b) {
+  const { x, y, z, w, d, h, c } = b;
+  poly([iso(x, y, z + h), iso(x + w, y, z + h), iso(x + w, y + d, z + h), iso(x, y + d, z + h)], b.flat ? c : shade(c, 1.16));
+  poly([iso(x, y + d, z), iso(x + w, y + d, z), iso(x + w, y + d, z + h), iso(x, y + d, z + h)], c);
+  poly([iso(x + w, y, z), iso(x + w, y + d, z), iso(x + w, y + d, z + h), iso(x + w, y, z + h)], b.flat ? c : shade(c, 0.7));
+  if (b.deco) b.deco(b);
+}
+// Painter's order: only boxes that overlap on screen get compared, then a depth-first topological sort.
+function sortBoxes(bs) {
+  const E = 1e-6;
+  for (const b of bs) {
+    b.k = b.x + b.y + (b.w + b.d) / 2 + b.z * 0.001;
+    b.l = OX + (b.x - b.y - b.d) * 12; b.r = OX + (b.x + b.w - b.y) * 12;
+    b.t = OY + (b.x + b.y) * 6 - (b.z + b.h) * 12; b.bt = OY + (b.x + b.w + b.y + b.d) * 6 - b.z * 12;
+    b.behind = []; b.seen = false;
+  }
+  const before = (a, b) => a.x + a.w <= b.x + E || a.y + a.d <= b.y + E || a.z + a.h <= b.z + E;
+  for (let i = 0; i < bs.length; i++) for (let j = i + 1; j < bs.length; j++) {
+    const a = bs[i], b = bs[j];
+    if (a.r <= b.l || b.r <= a.l || a.bt <= b.t || b.bt <= a.t) continue;
+    const ab = before(a, b), ba = before(b, a);
+    if (ab && !ba) b.behind.push(a);
+    else if (ba && !ab) a.behind.push(b);
+    else (a.k < b.k ? b.behind : a.behind).push(a.k < b.k ? a : b);
+  }
+  const out = [];
+  const visit = b => { if (b.seen) return; b.seen = true; for (const o of b.behind) visit(o); out.push(b); };
+  bs.sort((a, b) => a.k - b.k).forEach(visit);
+  return out;
+}
+
+// ---------- room ----------
+let seed = 7;
+const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const BUILDINGS = [];
+for (let x = 0; x < 112;) { const w = 6 + Math.floor(rnd() * 8), h = 10 + Math.floor(rnd() * 26); BUILDINGS.push({ x, w, h, s: rnd() * 100 }); x += w + 1; }
+const STARS = Array.from({ length: 22 }, () => ({ x: rnd() * 114, y: rnd() * 20, p: rnd() * 6 }));
+const hash = (a, b, c) => { const v = Math.sin(a * 12.9898 + b * 78.233 + c * 37.719) * 43758.5453; return v - Math.floor(v); };
+
+function skyline(t, w, h) {
+  const g = ctx.createLinearGradient(0, 0, 0, h);
+  g.addColorStop(0, '#121838'); g.addColorStop(0.7, '#3d2450'); g.addColorStop(1, '#7a3348');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+  for (const s of STARS) { if (Math.sin(t * 2 + s.p * 3) > -0.3) { ctx.fillStyle = '#f8f0d0'; ctx.fillRect(s.x, s.y, 1, 1); } }
+  ctx.fillStyle = '#f6e7b0'; ctx.beginPath(); ctx.arc(w - 18, 11, 6, 0, 7); ctx.fill();
+  ctx.fillStyle = '#d8c690'; ctx.fillRect(w - 20, 9, 2, 2); ctx.fillRect(w - 16, 13, 2, 1);
+  const tick = Math.floor(t / 4);
+  for (const b of BUILDINGS) {
+    ctx.fillStyle = '#0d0d1e'; ctx.fillRect(b.x, h - b.h, b.w, b.h);
+    ctx.fillStyle = '#f3c35a';
+    for (let wy = h - b.h + 2; wy < h - 2; wy += 3)
+      for (let wx = b.x + 1; wx < b.x + b.w - 1; wx += 2)
+        if (hash(b.s + wx, wy, tick + (wx % 3)) > 0.68) ctx.fillRect(wx, wy, 1, 1);
+  }
+  ctx.strokeStyle = '#2a160c'; ctx.lineWidth = 3; ctx.strokeRect(0, 0, w, h);
+}
+
+function drawWalls(t, now) {
+  // back-right wall, faces the audience
+  planeY(0, 0, H, () => {
+    const w = W * 12, h = H * 12;
+    ctx.fillStyle = '#6b3d22'; ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = '#57301a'; for (let u = 6; u < w; u += 10) ctx.fillRect(u, 0, 1.2, h);
+    ctx.fillStyle = '#3a1f10'; ctx.fillRect(0, 0, w, 3);
+    [['#e2672b', 0], ['#e8ab2e', 4], ['#8a9a3c', 8]].forEach(([c, o]) => { ctx.fillStyle = c; ctx.fillRect(0, h - 22 + o, w, 3); });
+  });
+  // back-left wall, in shade
+  planeX(D, 0, H, () => {
+    const w = D * 12, h = H * 12;
+    ctx.fillStyle = '#4f2c18'; ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = '#41230f'; for (let u = 6; u < w; u += 10) ctx.fillRect(u, 0, 1.2, h);
+    ctx.fillStyle = '#2c170b'; ctx.fillRect(0, 0, w, 3);
+    [['#e2672b', 0], ['#e8ab2e', 4], ['#8a9a3c', 8]].forEach(([c, o]) => { ctx.fillStyle = shade(c, .72); ctx.fillRect(0, h - 22 + o, w, 3); });
+  });
+  planeY(2.4, 0.01, 5.4, () => skyline(t, 115, 48));
+
+  // ON AIR light
+  drawBox(bx(0.25, 0, 4.55, 2, 0.12, 0.6, '#2b0d0a'));
+  planeY(0.25, 0.12, 5.15, () => {
+    ctx.font = '9px VT323, monospace'; ctx.textAlign = 'center';
+    ctx.fillStyle = '#ff4b33'; ctx.shadowColor = '#ff2a10'; ctx.shadowBlur = 5;
+    ctx.fillText('ON AIR', 12, 6.6);
+  });
+
+  // neon logo
+  const flick = hash(Math.floor(t * 12), 3, 9) > 0.97;
+  drawBox(bx(0, 3.8, 3.75, 0.08, 5.8, 1.95, '#1d1014'));
+  planeX(9.6, 0.08, 5.7, () => {
+    ctx.font = '11px Shrikhand, Georgia, serif'; ctx.textAlign = 'left';
+    ctx.shadowBlur = 6;
+    ctx.fillStyle = flick ? '#5a2a3a' : '#ff9cbc'; ctx.shadowColor = '#ff3d7f';
+    ctx.fillText('Midnight', 9, 10.5);
+    ctx.fillStyle = '#ffbf6a'; ctx.shadowColor = '#ff6a1a';
+    ctx.fillText('Lounge', 22, 21.5);
+  });
+
+  // applause sign
+  const lit = now < crowd.until;
+  drawBox(bx(0, 0.5, 3.9, 0.12, 2.9, 0.75, '#2b0d0a'));
+  planeX(3.4, 0.12, 4.65, () => {
+    ctx.font = '10px VT323, monospace'; ctx.textAlign = 'center';
+    const on = lit && Math.floor(t * 4) % 2 === 0;
+    ctx.fillStyle = on ? '#ff4a2a' : '#5a1c14';
+    if (on) { ctx.shadowColor = '#ff2a10'; ctx.shadowBlur = 6; }
+    ctx.fillText(lit && crowd.reaction === 'laugh' ? 'LAUGH' : 'APPLAUSE', 17.4, 7.8);
+  });
+}
+
+function drawFloor() {
+  for (let i = 0; i < W; i++) for (let j = 0; j < D; j++)
+    poly([iso(i, j), iso(i + 1, j), iso(i + 1, j + 1), iso(i, j + 1)], (i + j) % 2 ? '#5a2f1a' : '#4b2714');
+}
+
+function drawStage(t) {
+  drawBox(bx(1.5, 0, 0, 11, 4.2, Z0, '#2c6a63'));
+  drawBox(bx(1.5, 4.0, Z0, 11, 0.2, 0.01, '#e8ab2e', null, true));
+  const step = Math.floor(t * 5);
+  let n = 0;
+  for (let x = 1.75; x < 12.4; x += 0.55, n++) dot(iso(x, 4.2, Z0 / 2), (n + step) % 3 === 0);
+  for (let y = 0.25; y < 4.1; y += 0.55, n++) dot(iso(12.5, y, Z0 / 2), (n + step) % 3 === 0);
+}
+function dot(p, on) { ctx.fillStyle = on ? '#ffe08a' : '#7a6230'; ctx.fillRect(Math.round(p[0]) - 1, Math.round(p[1]) - 1, 2, 2); }
+
+// ---------- furniture & props ----------
+function scenery(B) {
+  // potted plant
+  B.push(bx(2.1, 1.4, Z0, 0.6, 0.6, 0.5, '#c4602a'));
+  B.push(bx(1.95, 1.25, Z0 + 0.5, 0.9, 0.9, 0.5, '#4f6b2a'));
+  B.push(bx(2.1, 1.4, Z0 + 1.0, 0.6, 0.6, 0.5, '#5f7d30'));
+  B.push(bx(2.25, 1.55, Z0 + 1.5, 0.3, 0.3, 0.4, '#6f8f38'));
+  // floor lamp
+  B.push(bx(7.75, 0.85, Z0, 0.4, 0.4, 0.08, '#3b2a1a'));
+  B.push(bx(7.9, 1.0, Z0 + 0.08, 0.1, 0.1, 2.15, '#c9a35a'));
+  B.push(bx(7.65, 0.75, Z0 + 2.2, 0.6, 0.6, 0.55, '#ffc65a', null, true));
+  // couch
+  B.push(bx(3.6, 1.25, Z0, 3.6, 0.35, 1.7, '#b5462a'));
+  for (let i = 0; i < 3; i++) B.push(bx(3.6 + i * 1.2, 1.6, Z0, 1.2, 1.05, 0.75, i % 2 ? '#c24e2c' : '#cc5630'));
+  B.push(bx(3.3, 1.25, Z0, 0.3, 1.4, 1.1, '#a23d24'));
+  B.push(bx(7.2, 1.25, Z0, 0.3, 1.4, 1.1, '#a23d24'));
+  // host chair
+  B.push(bx(9.25, 0.8, Z0 + 0.4, 0.9, 0.28, 1.9, '#4a2616'));
+  B.push(bx(9.3, 1.1, Z0, 0.8, 1.1, 0.85, '#3d1f12'));
+  // desk in stacked stripes
+  const dz = [[0.35, '#5b3220'], [0.14, '#e2672b'], [0.14, '#e8ab2e'], [0.14, '#8a9a3c'], [0.3, '#5b3220']];
+  let z = Z0;
+  for (const [h, c] of dz) { B.push(bx(8.2, 2.4, z, 3, 0.9, h, c)); z += h; }
+  B.push(bx(8.1, 2.3, z, 3.2, 1.1, 0.1, '#8a5430'));
+  z += 0.1;
+  B.push(bx(9.55, 2.45, z, 0.08, 0.08, 0.45, '#9a9a9a'));
+  B.push(bx(9.5, 2.4, z + 0.45, 0.18, 0.18, 0.18, '#333333'));
+  B.push(bx(10.55, 2.6, z, 0.18, 0.18, 0.22, '#f3e2bd'));
+  B.push(bx(8.6, 2.6, z, 0.45, 0.32, 0.05, '#f8f4e6'));
+  // drum kit
+  B.push(bx(1.1, 5.6, 0, 0.6, 0.6, 0.7, '#2e2e2e'));
+  B.push(bx(0.95, 6.9, 0, 0.9, 0.4, 0.85, '#f3e2bd', b => planeY(b.x, b.y + b.d, b.z + b.h, () => {
+    ctx.fillStyle = '#c23a22'; ctx.beginPath(); ctx.arc(5.4, 5.1, 3.6, 0, 7); ctx.fill();
+    ctx.fillStyle = '#e8ab2e'; ctx.beginPath(); ctx.arc(5.4, 5.1, 1.6, 0, 7); ctx.fill();
+  })));
+  B.push(bx(2.18, 6.48, 0, 0.08, 0.08, 0.55, '#777777'));
+  B.push(bx(2.0, 6.3, 0.55, 0.45, 0.45, 0.2, '#d8d0bc'));
+  B.push(bx(2.6, 6.0, 0, 0.06, 0.06, 1.4, '#777777'));
+  B.push(bx(2.35, 5.75, 1.4, 0.55, 0.55, 0.04, '#e3b94a'));
+  // electric piano
+  B.push(bx(1.0, 8.45, 0, 0.08, 0.3, 0.8, '#555555'));
+  B.push(bx(2.2, 8.45, 0, 0.08, 0.3, 0.8, '#555555'));
+  B.push(bx(0.9, 8.4, 0.8, 1.5, 0.45, 0.15, '#7a2418'));
+  B.push(bx(0.95, 8.42, 0.95, 1.4, 0.22, 0.02, '#f3e2bd'));
+  // bleachers
+  B.push(bx(4.1, 8.5, 0, 8.4, 0.6, 0.45, '#3a2418'));
+  B.push(bx(4.1, 9.3, 0, 8.4, 0.6, 0.45, '#3a2418'));
+  // studio camera
+  B.push(bx(11.6, 6.1, 0, 0.07, 0.07, 1.25, '#444444'));
+  B.push(bx(11.95, 6.45, 0, 0.07, 0.07, 1.25, '#444444'));
+  B.push(bx(11.55, 6.5, 0, 0.07, 0.07, 1.25, '#444444'));
+  B.push(bx(11.3, 6.0, 1.25, 0.9, 0.55, 0.55, '#7d8a8a', b => planeY(b.x, b.y + b.d, b.z + b.h, () => {
+    ctx.font = '7px VT323, monospace'; ctx.fillStyle = '#f3e2bd'; ctx.fillText('4', 6, 5.6);
+  })));
+  B.push(bx(10.85, 6.12, 1.33, 0.45, 0.32, 0.32, '#262626'));
+  B.push(bx(12.0, 6.05, 1.8, 0.25, 0.4, 0.25, '#555555'));
+  B.push(bx(11.4, 6.15, 1.8, 0.12, 0.12, 0.1, '#ff3b2f', null, true));
+}
+
+// ---------- people ----------
+function person(B, o) {
+  const L = o.look, px = o.x, py = o.y, z0 = o.z || 0, front = o.face !== 'back';
+  let tz;
+  if (o.pose === 'sit') {
+    const sz = z0 + o.seat;
+    B.push(bx(px - 0.3, py + 0.2, sz, 0.6, 0.8, 0.26, L.pants));
+    B.push(bx(px - 0.3, py + 0.8, z0, 0.6, 0.2, o.seat, L.pants));
+    B.push(bx(px - 0.3, py + 0.85, z0, 0.6, 0.35, 0.12, L.shoes));
+    tz = sz;
+  } else {
+    const s = o.walk ? Math.sin(o.t * 11) * 0.16 : 0;
+    B.push(bx(px - 0.28, py - 0.12 + s, z0, 0.24, 0.24, 0.95, L.pants));
+    B.push(bx(px + 0.04, py - 0.12 - s, z0, 0.24, 0.24, 0.95, L.pants));
+    tz = z0 + 0.95;
+  }
+  B.push(bx(px - 0.32, py - 0.2, tz, 0.64, 0.4, 0.85, L.suit, front ? b => shirtFront(b, L) : null));
+  const aL = o.armL || 0, aR = o.armR || 0;
+  B.push(bx(px - 0.48, py - 0.15, tz + 0.22 + aL, 0.16, 0.32, 0.6, L.suit));
+  B.push(bx(px + 0.32, py - 0.15, tz + 0.22 + aR, 0.16, 0.32, 0.6, L.suit));
+  B.push(bx(px - 0.47, py - 0.1, tz + 0.08 + aL, 0.14, 0.22, 0.14, L.skin));
+  B.push(bx(px + 0.33, py - 0.1, tz + 0.08 + aR, 0.14, 0.22, 0.14, L.skin));
+  const hx = px - 0.23, hy = py - 0.17, hz = tz + 0.85 + (o.bob || 0);
+  const headColor = front || L.style === 'bald' ? L.skin : L.hair;
+  B.push(bx(hx, hy, hz, 0.46, 0.36, 0.42, headColor, front ? b => faceDeco(b, o) : null));
+  hair(B, L, hx, hy, hz);
+  return hz + 0.42;
+}
+function hair(B, L, hx, hy, hz) {
+  const h = L.hair;
+  if (L.style === 'pomp') { B.push(bx(hx - 0.02, hy - 0.02, hz + 0.38, 0.5, 0.4, 0.12, h)); B.push(bx(hx + 0.06, hy + 0.12, hz + 0.5, 0.34, 0.26, 0.1, h)); }
+  else if (L.style === 'afro') B.push(bx(hx - 0.1, hy - 0.1, hz + 0.27, 0.66, 0.56, 0.42, h));
+  else if (L.style === 'slick') B.push(bx(hx - 0.02, hy - 0.03, hz + 0.34, 0.5, 0.41, 0.12, h));
+  else if (L.style === 'bald') { B.push(bx(hx - 0.05, hy + 0.02, hz + 0.14, 0.06, 0.3, 0.18, h)); B.push(bx(hx + 0.45, hy + 0.02, hz + 0.14, 0.06, 0.3, 0.18, h)); }
+}
+function faceDeco(b, o) {
+  const L = o.look;
+  planeY(b.x, b.y + b.d, b.z + b.h, () => {
+    ctx.fillStyle = '#1a0e08';
+    ctx.fillRect(1.3, 1.7, 1, 1); ctx.fillRect(3.5, 1.7, 1, 1);
+    if (L.glasses) { ctx.strokeStyle = '#1a0e08'; ctx.lineWidth = 0.5; ctx.strokeRect(0.7, 1.2, 2, 1.8); ctx.strokeRect(2.9, 1.2, 2, 1.8); }
+    if (L.style === 'slick') { ctx.fillStyle = L.hair; ctx.fillRect(0, 0.4, 0.7, 2.4); ctx.fillRect(4.8, 0.4, 0.7, 2.4); }
+    const open = o.talk && Math.sin(o.t * 22) > 0;
+    ctx.fillStyle = open ? '#4a140c' : '#7a3a28';
+    ctx.fillRect(2, 3.4, 1.6, open ? 1.4 : 0.7);
+  });
+}
+function shirtFront(b, L) {
+  planeY(b.x, b.y + b.d, b.z + b.h, () => {
+    if (L.front === 'patch') { ctx.fillStyle = L.tie; ctx.fillRect(1.2, 2, 1.8, 1.8); ctx.fillStyle = '#2a4a8a'; ctx.fillRect(4.4, 1.8, 1.6, 1.2); return; }
+    ctx.fillStyle = L.shirt; ctx.fillRect(2.6, 0, 2.6, 3.4);
+    ctx.fillStyle = L.tie;
+    if (L.front === 'bow') { ctx.fillRect(2.6, 0.3, 2.6, 1); }
+    else ctx.fillRect(3.5, 0.5, 0.9, 4.6);
+  });
+}
+function fan(B, x, y, z, i, t, now) {
+  const shirt = FAN_SHIRTS[i % FAN_SHIRTS.length], hairC = FAN_HAIR[(i * 3) % FAN_HAIR.length];
+  const reacting = now < crowd.until;
+  let bob = Math.sin(t * 1.4 + i) * 0.015, up = 0;
+  if (reacting && crowd.reaction === 'laugh') bob = Math.abs(Math.sin(t * 15 + i * 2.3)) * 0.07;
+  if (reacting && crowd.reaction === 'applause') { up = 0.18 + Math.abs(Math.sin(t * 14 + i)) * 0.12; bob = Math.abs(Math.sin(t * 9 + i * 1.7)) * 0.03; }
+  B.push(bx(x - 0.3, y - 0.15, z, 0.6, 0.35, 0.7, shirt));
+  B.push(bx(x - 0.22, y - 0.15, z + 0.7 + bob, 0.44, 0.36, 0.42, hairC));
+  if (up) { B.push(bx(x - 0.46, y - 0.08, z + 0.6 + up, 0.12, 0.14, 0.42, shirt)); B.push(bx(x + 0.34, y - 0.08, z + 0.6 + up, 0.12, 0.14, 0.42, shirt)); }
+}
+const FAN_SHIRTS = ['#c24e2c', '#e8ab2e', '#8a9a3c', '#2c6a63', '#7fb3c9', '#a05a8a', '#d8c29a'];
+const FAN_HAIR = ['#2a1a10', '#5a3a1c', '#1a1010', '#c9a35a', '#8a4a22', '#3a2a20', '#d8d0bc'];
+const DRUMMER = { skin:'#c48a62', hair:'#5a3a1c', style:'afro', suit:'#2c6a63', shirt:'#f3e2bd', tie:'#e8ab2e', front:'tie', pants:'#3a2418', shoes:'#1a0f0a' };
+const KEYS = { skin:'#f0c29a', hair:'#c9a35a', style:'bun', suit:'#a05a8a', shirt:'#f3e2bd', tie:'#e8ab2e', front:'bow', pants:'#3a2418', shoes:'#1a0f0a' };
+
+// ---------- show state ----------
+const crowd = { mood: 0.45, reaction: null, until: 0 };
+const band = { until: 0 };
+const show = { gi: 0, si: 0, state: 'idle', until: 0, stepStart: 0, line: null, guest: 'off', walkStart: 0 };
+const WALK_MS = 3000;
+const PATH = [[3.6, 9.9, 0], [3.6, 4.8, 0], [5.6, 3.6, 0], [5.6, 3.05, Z0]];
+const SEG = PATH.slice(1).map((p, i) => Math.hypot(p[0] - PATH[i][0], p[1] - PATH[i][1]));
+const PATH_LEN = SEG.reduce((a, b) => a + b, 0);
+function along(q) {
+  let d = q * PATH_LEN;
+  for (let i = 0; i < SEG.length; i++) {
+    if (d <= SEG[i] || i === SEG.length - 1) {
+      const f = Math.min(1, d / SEG[i]), a = PATH[i], b = PATH[i + 1];
+      return [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f, a[2] + (b[2] - a[2]) * f];
+    }
+    d -= SEG[i];
+  }
+}
+
+const ccEl = document.getElementById('cc');
+const chyEl = document.getElementById('chyron');
+let chyronUntil = 0, lastCaption = '';
+
+function startStep(now) {
+  const g = GUESTS[show.gi], st = g.steps[show.si];
+  show.stepStart = now;
+  if (st.enter) {
+    show.guest = 'walkIn'; show.walkStart = now;
+    band.until = now + 2200; sting();
+    markLineup();
+  }
+  if (st.exit) {
+    show.guest = 'walkOut'; show.walkStart = now;
+    show.state = 'exit'; show.until = now + WALK_MS + 500;
+    band.until = now + WALK_MS;
+    return;
+  }
+  show.state = 'speaking'; show.line = st;
+  show.until = now + 1300 + st.text.length * 55;
+}
+
+function react(type, now) {
+  crowd.reaction = type; crowd.until = now + 1900;
+  crowd.mood = Math.min(1, crowd.mood + (type === 'applause' ? 0.22 : 0.14));
+  if (type === 'applause') applauseSound();
+}
+
+function update(now, dt) {
+  if (show.guest === 'walkIn' && now - show.walkStart >= WALK_MS) { show.guest = 'seated'; showChyron(GUESTS[show.gi], now); }
+  if (show.guest === 'walkOut' && now - show.walkStart >= WALK_MS) show.guest = 'off';
+  if (chyronUntil && now > chyronUntil) { chyEl.classList.remove('on'); chyronUntil = 0; }
+  crowd.mood += (0.3 - crowd.mood) * Math.min(1, dt / 9000);
+  captions(now);
+  if (now < show.until) return;
+  if (show.state === 'speaking') {
+    let r = null;
+    try { r = audienceReaction(show.line, crowd); } catch (e) { console.error(e); }
+    if (r === 'laugh' || r === 'applause') { react(r, now); show.state = 'reacting'; show.until = now + 1900; }
+    else { show.state = 'pause'; show.until = now + 450; }
+    return;
+  }
+  if (show.state === 'exit') { show.gi = (show.gi + 1) % GUESTS.length; show.si = 0; show.guest = 'off'; startStep(now); return; }
+  show.si++;
+  startStep(now);
+}
+
+function captions(now) {
+  let s = lastCaption;
+  const g = GUESTS[show.gi];
+  if (show.state === 'speaking') {
+    const n = Math.floor((now - show.stepStart) / 30);
+    s = (show.line.who === 'host' ? 'Rex' : g.short) + ': ' + show.line.text.slice(0, n);
+  } else if (now < crowd.until) s = crowd.reaction === 'applause' ? '[ applause ]' : '[ laughter ]';
+  else if (show.state === 'exit') s = '♪ [ band plays ] ♪';
+  if (s !== lastCaption) { ccEl.textContent = s; lastCaption = s; }
+}
+
+function showChyron(g, now) {
+  document.getElementById('chyName').textContent = g.name;
+  document.getElementById('chyRole').textContent = g.role;
+  chyEl.classList.add('on');
+  chyronUntil = now + 4800;
+}
+
+function jumpTo(i) {
+  const now = performance.now();
+  show.gi = i; show.si = 0; show.guest = 'off'; crowd.until = 0;
+  chyEl.classList.remove('on'); chyronUntil = 0;
+  startStep(now);
+}
+
+// ---------- render ----------
+const CANS = [
+  { x: 92, target: () => iso(5.4, 2.4, Z0), warm: 'rgba(255,214,150,' },
+  { x: 206, target: () => iso(9.7, 1.9, Z0), warm: 'rgba(255,224,170,' },
+  { x: 30, target: () => iso(1.6, 7.0, 0), warm: 'rgba(255,150,120,', band: true },
+];
+function cones(now) {
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  for (const c of CANS) {
+    const a = c.band ? (now < band.until ? 1 : 0.45) : 1;
+    const [tx, ty] = c.target();
+    const g = ctx.createLinearGradient(c.x, 0, tx, ty);
+    g.addColorStop(0, c.warm + (0.2 * a) + ')'); g.addColorStop(1, c.warm + (0.05 * a) + ')');
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.moveTo(c.x - 3, 5); ctx.lineTo(c.x + 3, 5); ctx.lineTo(tx + 24, ty); ctx.lineTo(tx - 24, ty); ctx.closePath(); ctx.fill();
+    const pool = ctx.createRadialGradient(tx, ty, 0, tx, ty, 28);
+    pool.addColorStop(0, c.warm + (0.2 * a) + ')'); pool.addColorStop(1, c.warm + '0)');
+    ctx.save(); ctx.translate(tx, ty); ctx.scale(1, 0.5); ctx.fillStyle = pool; ctx.beginPath(); ctx.arc(0, 0, 28, 0, 7); ctx.fill(); ctx.restore();
+  }
+  ctx.restore();
+  for (const c of CANS) { ctx.fillStyle = '#1e1e1e'; ctx.fillRect(c.x - 5, 0, 10, 5); ctx.fillStyle = '#ffe9b0'; ctx.fillRect(c.x - 4, 5, 8, 1); }
+}
+function bubble(p, t) {
+  const x = Math.round(p[0]) - 6, y = Math.round(p[1]) - 12;
+  ctx.fillStyle = '#f8f4e6';
+  ctx.fillRect(x, y, 13, 7); ctx.fillRect(x + 1, y - 1, 11, 9); ctx.fillRect(x + 3, y + 8, 2, 2); ctx.fillRect(x + 2, y + 10, 1, 1);
+  ctx.fillStyle = '#1a0e08';
+  const k = Math.floor(t * 4) % 4;
+  for (let i = 0; i < 3; i++) if (k > i) ctx.fillRect(x + 2 + i * 3.5, y + 3, 2, 2);
+}
+
+function render(now) {
+  const t = now / 1000;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.fillStyle = '#140b08'; ctx.fillRect(0, 0, cv.width, cv.height);
+  drawWalls(t, now);
+  drawFloor();
+  drawStage(t);
+
+  const B = [];
+  scenery(B);
+  const speaking = show.state === 'speaking' ? show.line.who : null;
+  let bubbleAt = null;
+
+  const hostTalk = speaking === 'host';
+  const hostTop = person(B, { look: REX, pose: 'sit', x: 9.7, y: 1.3, z: Z0, seat: 0.85, t, talk: hostTalk,
+    bob: hostTalk ? Math.abs(Math.sin(t * 9)) * 0.03 : Math.sin(t * 1.2) * 0.01,
+    armR: hostTalk ? 0.06 + Math.sin(t * 5) * 0.08 : 0 });
+  if (hostTalk) bubbleAt = iso(9.7, 1.1, hostTop + 0.35);
+
+  const g = GUESTS[show.gi];
+  if (show.guest !== 'off') {
+    const guestTalk = speaking === 'guest' && show.guest === 'seated';
+    let o;
+    if (show.guest === 'seated') o = { pose: 'sit', x: 5.6, y: 1.85, z: Z0, seat: 0.75 };
+    else {
+      const p = Math.min(1, (now - show.walkStart) / WALK_MS);
+      const [x, y, z] = along(show.guest === 'walkIn' ? p : 1 - p);
+      o = { pose: 'stand', x, y, z, walk: p < 1, face: show.guest === 'walkIn' ? 'back' : 'front' };
+    }
+    Object.assign(o, { look: g.look, t, talk: guestTalk,
+      bob: guestTalk ? Math.abs(Math.sin(t * 8)) * 0.03 : 0,
+      armL: guestTalk ? 0.05 + Math.sin(t * 4) * 0.07 : 0 });
+    const top = person(B, o);
+    if (guestTalk) bubbleAt = iso(o.x, o.y - 0.2, top + 0.35);
+  }
+
+  const playing = now < band.until;
+  person(B, { look: DRUMMER, pose: 'sit', x: 1.4, y: 5.8, z: 0, seat: 0.7, t,
+    armL: playing ? Math.abs(Math.sin(t * 22)) * 0.2 : 0,
+    armR: playing ? Math.abs(Math.cos(t * 22)) * 0.2 : Math.abs(Math.sin(t * 4)) * 0.05,
+    bob: playing ? Math.abs(Math.sin(t * 11)) * 0.04 : 0 });
+  person(B, { look: KEYS, pose: 'stand', x: 1.65, y: 7.9, z: 0, t,
+    bob: playing ? Math.abs(Math.sin(t * 8)) * 0.05 : Math.sin(t * 1.5) * 0.01,
+    armL: playing ? Math.abs(Math.sin(t * 12)) * 0.08 : 0, armR: playing ? Math.abs(Math.cos(t * 12)) * 0.08 : 0 });
+
+  let i = 0;
+  for (let k = 0; k < 9; k++) fan(B, 4.6 + k * 0.9, 8.75, 0.45, i++, t, now);
+  for (let k = 0; k < 8; k++) fan(B, 5.05 + k * 0.9, 9.55, 0.45, i++, t, now);
+
+  for (const b of sortBoxes(B)) drawBox(b);
+  cones(now);
+  if (bubbleAt) bubble(bubbleAt, t);
+}
+
+// ---------- sound (only after the viewer switches it on) ----------
+let ac = null, soundOn = false;
+function audio() { if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)(); if (ac.state === 'suspended') ac.resume(); return ac; }
+function noise(a, dur) {
+  const buf = a.createBuffer(1, Math.floor(a.sampleRate * dur), a.sampleRate), d = buf.getChannelData(0);
+  for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  const s = a.createBufferSource(); s.buffer = buf; return s;
+}
+function drumHit(a, t, f, len, vol) {
+  const o = a.createOscillator(), g = a.createGain();
+  o.frequency.setValueAtTime(f, t); o.frequency.exponentialRampToValueAtTime(f * 0.5, t + len);
+  g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + len);
+  o.connect(g).connect(a.destination); o.start(t); o.stop(t + len);
+}
+function rimshot() {
+  if (!soundOn) return;
+  const a = audio(), t = a.currentTime;
+  drumHit(a, t, 220, 0.12, 0.5); drumHit(a, t + 0.17, 160, 0.14, 0.5);
+  const n = noise(a, 0.7), hp = a.createBiquadFilter(), g = a.createGain();
+  hp.type = 'highpass'; hp.frequency.value = 6000;
+  g.gain.setValueAtTime(0.35, t + 0.36); g.gain.exponentialRampToValueAtTime(0.001, t + 1.0);
+  n.connect(hp).connect(g).connect(a.destination); n.start(t + 0.36);
+}
+function applauseSound() {
+  if (!soundOn) return;
+  const a = audio(), t = a.currentTime, dur = 1.9;
+  const n = noise(a, dur), bp = a.createBiquadFilter(), g = a.createGain();
+  bp.type = 'bandpass'; bp.frequency.value = 2200; bp.Q.value = 0.6;
+  g.gain.setValueAtTime(0, t);
+  for (let i = 0; i < dur / 0.02; i++) {
+    const env = Math.min(1, i / 12) * Math.min(1, (dur / 0.02 - i) / 30);
+    g.gain.setValueAtTime((0.12 + Math.random() * 0.28) * env, t + i * 0.02);
+  }
+  n.connect(bp).connect(g).connect(a.destination); n.start(t);
+}
+function sting() {
+  if (!soundOn) return;
+  const a = audio(), t = a.currentTime, lp = a.createBiquadFilter(), g = a.createGain();
+  lp.type = 'lowpass'; lp.frequency.value = 1600;
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.12, t + 0.04); g.gain.exponentialRampToValueAtTime(0.001, t + 0.9);
+  lp.connect(g).connect(a.destination);
+  for (const f of [233.1, 293.7, 349.2, 466.2]) { const o = a.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f; o.connect(lp); o.start(t); o.stop(t + 0.95); }
+}
+
+// ---------- controls ----------
+const lineupEl = document.getElementById('lineup');
+GUESTS.forEach((g, i) => {
+  const li = document.createElement('li');
+  li.innerHTML = `<button class="slot" type="button" data-i="${i}"><time>${g.slot}</time><span><b>${g.name}</b><small>${g.role}</small></span><span class="tune">Tune in</span></button>`;
+  lineupEl.appendChild(li);
+});
+lineupEl.addEventListener('click', e => { const b = e.target.closest('.slot'); if (b) jumpTo(+b.dataset.i); });
+function markLineup() {
+  lineupEl.querySelectorAll('.slot').forEach((b, i) => {
+    const on = i === show.gi;
+    b.setAttribute('aria-current', on ? 'true' : 'false');
+    b.querySelector('.tune').textContent = on ? 'On now' : 'Tune in';
+  });
+}
+document.getElementById('btnApplause').addEventListener('click', () => react('applause', performance.now()));
+document.getElementById('btnRimshot').addEventListener('click', () => { band.until = performance.now() + 900; crowd.mood = Math.min(1, crowd.mood + 0.05); rimshot(); });
+document.getElementById('btnBand').addEventListener('click', () => { band.until = performance.now() + 3000; sting(); });
+const soundBtn = document.getElementById('btnSound');
+soundBtn.addEventListener('click', () => {
+  soundOn = !soundOn;
+  if (soundOn) { try { audio(); } catch (e) { soundOn = false; } }
+  soundBtn.setAttribute('aria-pressed', String(soundOn));
+  soundBtn.textContent = soundOn ? 'Sound on' : 'Sound off';
+});
+let knobRot = 0;
+const knob = document.getElementById('knob');
+knob.addEventListener('click', () => { knobRot += 40; knob.style.setProperty('--rot', knobRot + 'deg'); jumpTo((show.gi + 1) % GUESTS.length); });
+
+// ---------- loop ----------
+const needle = document.getElementById('needle');
+const clockEl = document.getElementById('clock');
+const t0 = performance.now();
+function clockText(now) {
+  const total = 23 * 60 + 35 + Math.floor((now - t0) / 10000);
+  const h24 = Math.floor(total / 60) % 24, m = total % 60, h12 = ((h24 + 11) % 12) + 1;
+  return `${h12}:${String(m).padStart(2, '0')} ${h24 < 12 ? 'AM' : 'PM'}`;
+}
+
+// open mid-interview so the first frame already shows the show in progress
+(function begin() {
+  const now = performance.now();
+  show.gi = 0; show.si = 1; show.guest = 'seated';
+  markLineup(); showChyron(GUESTS[0], now); startStep(now);
+})();
+
+let last = performance.now();
+function frame(now) {
+  const dt = now - last; last = now;
+  update(now, dt);
+  render(now);
+  needle.style.transform = `rotate(${-50 + crowd.mood * 100}deg)`;
+  const c = clockText(now); if (clockEl.textContent !== c) clockEl.textContent = c;
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
